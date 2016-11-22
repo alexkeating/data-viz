@@ -21,9 +21,10 @@ class RunQueryViewSet(APIView):
 
         engine = create_engine(os.getenv('DATABASE_CONNECTION'))
         connection = engine.connect()
-        result = connection.execute("{query};".format(query=query.get('q_string')))
-
+        result = connection.execute("{query}".format(query=query.get('q_string')))
+        print "executed query"
         json = {'results': [dict(row.items()) for row in result]}
         connection.close()
+
 
         return Response(data=json, status=status.HTTP_201_CREATED)

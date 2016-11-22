@@ -6,13 +6,18 @@
     "react-scripts": "0.7.0"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "react": "^15.4.0",
-    "react-dom": "^15.4.0"
+    "react-dom": "^15.4.0",
+    "react-router": "^3.0.0",
+    "whatwg-fetch": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "styles": "stylus -u autoprefixer-stylus ./src/css/style.bootstrap.styl -o ./src/css/bootstrap.css",
+    "styles:watch": "stylus -u autoprefixer-stylus -w ./src/css/bosststrap.styl -o ./src/css/bootstrap.css"
   }
 }
