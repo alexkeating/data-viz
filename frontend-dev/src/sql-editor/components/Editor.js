@@ -16,7 +16,7 @@ class Editor extends React.Component {
                             e.preventDefault();
                             this.props.sendRequest(this.props.query);
                         }
-                        } className="btn btn-default">Submit
+                        } className="btn btn-default pull-right">Submit
                         </button>
                     </form>
 
