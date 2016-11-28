@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import Editor from './Editor'
-import DisplayResults from './DisplayResults'
-import 'whatwg-fetch'
+import Editor from './Editor';
+import DisplayResults from './DisplayResults';
+import ZenoNavbar from './ZenoNavbar';
+import 'whatwg-fetch';
 
 class App extends Component {
     constructor() {
@@ -67,10 +68,13 @@ class App extends Component {
         return (
             <div className="btn-warning container-fluid">
                 <div className="row">
-                    <h1 className="text-center">Zeno</h1>
+                    <ZenoNavbar />
                 </div>
-                <Editor sendRequest={this.sendRequest} handleChange={this.handleChange}
-                        query={this.state.querystring}/>
+                <div className="row shift-content">
+                    <h1 className="text-center">Zeno</h1>
+                    <Editor sendRequest={this.sendRequest} handleChange={this.handleChange}
+                            query={this.state.querystring}/>
+                </div>
                 <span>Results: {this.state.results.length}</span>
                 <div className="container pre-scrollable">
                     {this.state.showTable ?  <DisplayResults results={this.state.results}/> : <span />}

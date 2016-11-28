@@ -16,3 +16,7 @@ body {
 .text-black{
     color:#000000;
 }
+
+.shift-content {
+    padding-top: 65px;
+}
