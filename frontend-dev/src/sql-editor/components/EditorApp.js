@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Editor from './Editor';
 import DisplayResults from './DisplayResults';
 import ZenoNavbar from './ZenoNavbar';
+import ChartNavbar from './ChartNavbar';
 import 'whatwg-fetch';
 
 class App extends Component {
@@ -72,6 +73,8 @@ class App extends Component {
                 </div>
                 <div className="row shift-content">
                     <h1 className="text-center">Zeno</h1>
+                    <ChartNavbar />
+                    <br/>
                     <Editor sendRequest={this.sendRequest} handleChange={this.handleChange}
                             query={this.state.querystring}/>
                 </div>

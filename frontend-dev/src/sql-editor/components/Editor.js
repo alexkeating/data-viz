@@ -19,7 +19,7 @@ class Editor extends React.Component {
                         } className="btn btn-default pull-right">Submit
                         </button>
                     </form>
-
+                    <button className="btn btn-default pull-left">Save</button>
                 </div>
                 <div className="col-md-1"></div>
             </div>
