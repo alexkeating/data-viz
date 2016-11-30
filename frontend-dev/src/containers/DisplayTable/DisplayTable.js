@@ -5,7 +5,7 @@ import React from 'react'
 import JsonTable from 'react-json-table'
 
 
-class DisplayResults extends React.Component {
+class DisplayTable extends React.Component {
 
     render () {
         return (
@@ -15,4 +15,4 @@ class DisplayResults extends React.Component {
     }
 }
 
-export default DisplayResults;
+export default DisplayTable;

@@ -1,6 +1,6 @@
 import React from 'react';
-import ChartNavbar from './ChartNavbar';
-import ZenoNavbar from './ZenoNavbar';
+import ChartNavbar from '../ChartNavbar/ChartNavbar';
+import ZenoNavbar from '../Navbar/ZenoNavbar';
 
 class ChartSetting extends React.Component {
     render() {

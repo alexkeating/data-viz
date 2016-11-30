@@ -1,6 +1,6 @@
 import React from 'react';
 
-class NotFound extends React.Component {
+class Error extends React.Component {
   render() {
     return (
       <h2>Not Found!111!!</h2>
@@ -8,4 +8,4 @@ class NotFound extends React.Component {
   }
 }
 
-export default NotFound;
+export default Error;

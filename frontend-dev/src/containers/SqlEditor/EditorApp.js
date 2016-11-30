@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Editor from './Editor';
-import DisplayResults from './DisplayResults';
-import ZenoNavbar from './ZenoNavbar';
-import ChartNavbar from './ChartNavbar';
+import Editor from '../Editor/Editor';
+import DisplayTable from '../DisplayTable/DisplayTable';
+import ZenoNavbar from '../Navbar/ZenoNavbar';
+import ChartNavbar from '../ChartNavbar/ChartNavbar';
 import 'whatwg-fetch';
 
 class App extends Component {
@@ -80,7 +80,7 @@ class App extends Component {
                 </div>
                 <span>Results: {this.state.results.length}</span>
                 <div className="container pre-scrollable">
-                    {this.state.showTable ?  <DisplayResults results={this.state.results}/> : <span />}
+                    {this.state.showTable ?  <DisplayTable results={this.state.results}/> : <span />}
                 </div>
             </div>
         );
