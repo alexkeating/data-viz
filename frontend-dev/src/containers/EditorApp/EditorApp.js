@@ -5,18 +5,27 @@ import ZenoNavbar from '../Navbar/ZenoNavbar';
 import ChartNavbar from '../ChartNavbar/ChartNavbar';
 import 'whatwg-fetch';
 
+import './editor_app.css'
+
 class App extends Component {
     constructor() {
         super();
 
         this.sendRequest = this.sendRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.getAllDashboards = this.getAllDashboards.bind(this);
+
         this.state = {
             results: [],
             querystring: '',
             showTable: false,
+            dashboards: {},
         };
     }
+
+    componentDidMount() {
+        this.getAllDashboards();
+    };
 
     componentWillMount() {
 
@@ -59,6 +68,42 @@ class App extends Component {
             .catch((error) => console.log(error))
     }
 
+    postNewDashboard () {
+        // How do I make this more reusable
+        // Is having the url params safe
+
+        const url = 'http://127.0.0.1:8000/api/v1/dashboard';
+        const dashboardId = Math.max(...Object.keys(this.props.dashboards).map(key => parseInt(key)));
+        const data = JSON.stringify({
+            id: dashboardId,
+            name: this.state.name,
+        });
+
+        fetch(url, {
+            method: 'post',
+            body: data,
+            headers: {
+                 Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .catch((error) => console.log(error))
+    }
+
+     getAllDashboards () {
+
+        const url = 'http://127.0.0.1:8000/api/v1/dashboard';
+
+        fetch(url)
+            .then(response => response.json())
+            .then(json => this.setState({
+                dashboards:  json,
+            }))
+            .catch((error) => console.log(error))
+
+    }
+
     handleChange(event) {
         this.setState({querystring: event.target.value});
 
@@ -69,7 +114,7 @@ class App extends Component {
         return (
             <div className="btn-warning container-fluid">
                 <div className="row">
-                    <ZenoNavbar />
+                    <ZenoNavbar dashboards={this.state.dashboards} createDashboard={this.postNewDashboard()}/>
                 </div>
                 <div className="row shift-content">
                     <h1 className="text-center">Zeno</h1>

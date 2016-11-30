@@ -2,6 +2,16 @@ import React from 'react';
 import { Navbar, NavItem, MenuItem, NavDropdown, Nav } from 'react-bootstrap';
 
 class ZenoNavbar extends React.Component {
+    constructor(){
+        super();
+        this.dashboardRedirectUrl = this.dashboardRedirectUrl.bind(this);
+    }
+
+    dashboardRedirectUrl () {
+        const highest_id = Math.max(...Object.keys(this.props.dashboards).map(key => parseInt(key)));
+        return `dashboard/${highest_id+1}`;
+    }
+
     render() {
         return (
             <Navbar className="navbar-fixed-top">
@@ -22,9 +32,11 @@ class ZenoNavbar extends React.Component {
                         </NavDropdown>
                     </Nav>
                     <Nav pullRight>
-                        <NavItem>Add Dashboard</NavItem>
+                        <NavItem onClick={this.props.createDashboard} href={'/' + this.dashboardRedirectUrl()}>
+                            Add Dashboard
+                        </NavItem>
                         <Navbar.Brand href="#">
-                            <img src="/images/database.svg" />
+                            <img src="/images/database.svg"/>
                         </Navbar.Brand>
                     </Nav>
                 </Navbar.Collapse>

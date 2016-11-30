@@ -27,7 +27,6 @@ class RunQueryViewSet(APIView):
         json = {'results': [dict(row.items()) for row in result]}
         connection.close()
 
-
         return Response(data=json, status=status.HTTP_201_CREATED)
 
 
@@ -35,6 +34,11 @@ class DashboardViewSet(APIView):
     """
     Queries your database
     """
+
+    def get(self, request):
+        queryset = Dashboard.objects.all()
+        all_dashboards = {dashboard.id: {"name": dashboard.title} for dashboard in queryset}
+        return Response(data=all_dashboards, status=status.HTTP_201_CREATED)
 
     def post(self, request):
         """

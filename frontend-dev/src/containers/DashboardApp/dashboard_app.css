@@ -1,0 +1,30 @@
+
+.shift-content {
+    padding-top: 65px;
+}
+
+.button-add-query {
+    margin-top: 30px;
+    margin-left: 15px;
+}
+
+.title-selected {
+    background: #FF69B4;
+    height: 40px;
+    width: auto;
+    font-size: 150%;
+    margin-top: 30px;
+    margin-left: 15px;
+    border: 1px solid blue;
+    box-sizing: border-box;
+}
+
+.title-unselected {
+    background: #D3D3D3;
+    height: 40px;
+    width: auto;
+    font-size: 150%;
+    margin-top: 30px;
+    margin-left: 15px;
+    box-sizing: border-box;
+}
