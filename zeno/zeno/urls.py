@@ -20,4 +20,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/querystring', views.RunQueryViewSet.as_view()),
+    url(r'^api/v1/dashboard', views.DashboardViewSet.as_view()),
 ]

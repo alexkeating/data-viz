@@ -1,4 +1,5 @@
 import os
+from mainsite.models import Dashboard
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -28,3 +29,26 @@ class RunQueryViewSet(APIView):
 
 
         return Response(data=json, status=status.HTTP_201_CREATED)
+
+
+class DashboardViewSet(APIView):
+    """
+    Queries your database
+    """
+
+    def post(self, request):
+        """
+        This will take a dashboardId and create a new dashboard object
+        :param request:
+        :return:
+        """
+
+        dashboard_dict = request.data
+        try:
+            dashboard = Dashboard.objects.get(id=dashboard_dict['id'])
+            dashboard.title =dashboard_dict['name']
+            dashboard.save(update_fields=['title'])
+        except Dashboard.DoesNotExist:
+            Dashboard.objects.create(id=dashboard_dict['id'], title=dashboard_dict['name'])
+
+        return Response(status=status.HTTP_201_CREATED)
