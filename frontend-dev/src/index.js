@@ -5,9 +5,9 @@ import {  BrowserRouter, Match, Miss } from 'react-router';
 import './css/index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
-import EditorApp from './sql-editor/components/EditorApp';
-import ChartSetting from './sql-editor/components/ChartSetting';
-import NotFound from './sql-editor/components/NotFound';
+import EditorApp from './components/EditorApp';
+import ChartSetting from './components/ChartSetting';
+import NotFound from './components/NotFound';
 
 const Root = () => {
   return (

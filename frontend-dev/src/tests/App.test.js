@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from '../components/EditorApp';
+import App from '../../components/EditorApp';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
