@@ -24,11 +24,13 @@ class ZenoNavbar extends React.Component {
                 <Navbar.Collapse>
                     <Nav>
                         <NavDropdown eventKey={3} title="Dashboards" id="basic-nav-dropdown">
-                            <MenuItem eventKey={3.1}>Action</MenuItem>
-                            <MenuItem eventKey={3.2}>Another action</MenuItem>
-                            <MenuItem eventKey={3.3}>Something else here</MenuItem>
-                            <MenuItem divider/>
-                            <MenuItem eventKey={3.3}>Separated link</MenuItem>
+                            {
+                                Object
+                                    .keys(this.props.dashboards)
+                                    .map(key => <MenuItem key={key} href={"/dashboard/" + key}>
+                                                {this.props.dashboards[key].name}
+                                                </MenuItem>)
+                            }
                         </NavDropdown>
                     </Nav>
                     <Nav pullRight>

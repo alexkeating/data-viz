@@ -3,7 +3,7 @@ import ZenoNavbar from '../Navbar/ZenoNavbar';
 
 import './dashboard_app.css'
 
-// TODO 1. Show all dashboards in dropdown
+// TODO
 //      2. Hook up query button to redirect create adn save a query
 //      3. Display _Table2
 //      4. Support line and bar charts
@@ -27,7 +27,7 @@ class DashboardApp extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.getAllDashboards();
     };
 
@@ -36,7 +36,7 @@ class DashboardApp extends React.Component {
         // Is having the url params safe
 
         const url = 'http://127.0.0.1:8000/api/v1/dashboard';
-        const { dashboardId } = this.props.params
+        const { dashboardId } = this.props.params;
         const data = JSON.stringify({
             id: dashboardId,
             name: this.state.name,

@@ -23,11 +23,8 @@ class App extends Component {
         };
     }
 
-    componentDidMount() {
-        this.getAllDashboards();
-    };
-
     componentWillMount() {
+        this.getAllDashboards();
 
         // check if there is any order in localStorage
         const localStorageRef = localStorage.getItem('query');
