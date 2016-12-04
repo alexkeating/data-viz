@@ -14,50 +14,39 @@ class App extends Component {
         this.sendRequest = this.sendRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.getAllDashboards = this.getAllDashboards.bind(this);
+        this.postNewQuery = this.postNewQuery.bind(this);
+        this.getQuery = this.getQuery.bind(this);
 
         this.state = {
             results: [],
             querystring: '',
             showTable: false,
             dashboards: {},
+            x: '',
+            y: '',
+            query: {},
         };
     }
 
     componentWillMount() {
         this.getAllDashboards();
-
-        // check if there is any order in localStorage
-        const localStorageRef = localStorage.getItem('query');
-
-        if (localStorageRef) {
-            // update our App component's order state
-            this.setState({
-                querystring: localStorageRef
-            });
-        }
-
+        this.getQuery();
     }
-
-    componentWillUpdate(nextProps, nextState) {
-        localStorage.setItem('query', this.state.querystring)
-    }
-
 
     sendRequest(query) {
-        let base_uri = 'http://127.0.0.1:8000/api/v1/querystring?q_string=';
+        let base_uri = 'http://127.0.0.1:8000/api/v1/querystring/?q_string=';
         let query_uri = base_uri.concat(query);
-        const self = this;
 
         fetch(query_uri, {
             method: 'post',
             headers: {
-                 Accept: 'application/json',
-                'Content-Type': 'application/json'
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
         })
             .then(response => response.json())
             .then(json => {
-                self.setState({
+                this.setState({
                     results: json.results,
                     showTable: true,
                 })
@@ -88,6 +77,29 @@ class App extends Component {
             .catch((error) => console.log(error))
     }
 
+    postNewQuery() {
+        // How do I make this more reusable
+        // Is having the url params safe
+        const {dashboardId, queryId} = this.props.params;
+        const url = `http://127.0.0.1:8000/api/v1/dashboard/${dashboardId}/query/${queryId}`;
+        const data = JSON.stringify({
+            x: this.state.x,
+            y: this.state.y,
+            querystring: this.state.querystring,
+        });
+
+        fetch(url, {
+            method: 'post',
+            body: data,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .catch((error) => console.log(error))
+    }
+
      getAllDashboards () {
 
         const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
@@ -96,6 +108,20 @@ class App extends Component {
             .then(response => response.json())
             .then(json => this.setState({
                 dashboards:  json,
+            }))
+            .catch((error) => console.log(error))
+
+    }
+
+    getQuery () {
+        const {dashboardId, queryId} = this.props.params;
+        const url = `http://127.0.0.1:8000/api/v1/dashboard/${dashboardId}/query/${queryId}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(json => this.setState({
+                query:  json,
+                querystring: json.query.querystring,
             }))
             .catch((error) => console.log(error))
 
@@ -118,14 +144,14 @@ class App extends Component {
                     <ChartNavbar />
                     <br/>
                     <Editor sendRequest={this.sendRequest} handleChange={this.handleChange}
-                            query={this.state.querystring}/>
+                            querystring={this.state.querystring} saveQuerystring={this.postNewQuery()} />
                 </div>
                 <span>Results: {this.state.results.length}</span>
                 <div className="container pre-scrollable">
                     {this.state.showTable ?  <DisplayTable results={this.state.results}/> : <span />}
                 </div>
             </div>
-        );
+        )
     }
 }
 

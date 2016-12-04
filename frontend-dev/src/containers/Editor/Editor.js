@@ -10,16 +10,16 @@ class Editor extends React.Component {
                 <div className="col-md-10">
                     <form>
                         <textarea className="form-control" name="editor" cols="30" rows="10"
-                                  value={this.props.query} onChange={this.props.handleChange}/>
+                                  value={this.props.querystring} onChange={this.props.handleChange}/>
                         <br />
                         <button onClick={(e) => {
                             e.preventDefault();
-                            this.props.sendRequest(this.props.query);
+                            this.props.sendRequest(this.props.querystring);
                         }
                         } className="btn btn-default pull-right">Submit
                         </button>
                     </form>
-                    <button className="btn btn-default pull-left">Save</button>
+                    <button onClick={this.props.saveQuerystring} className="btn btn-default pull-left">Save</button>
                 </div>
                 <div className="col-md-1"></div>
             </div>

@@ -11,7 +11,7 @@ class RunQueryViewSet(APIView):
     Queries your database
     """
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         """
         This will use the query params which are a database string and the the raw
         sql of the desired query
@@ -35,12 +35,12 @@ class DashboardViewSet(APIView):
     Queries your database
     """
 
-    def get(self, request):
+    def get(self, request, **kwargs):
         queryset = Dashboard.objects.all()
         all_dashboards = {dashboard.id: {"name": dashboard.title} for dashboard in queryset}
         return Response(data=all_dashboards, status=status.HTTP_201_CREATED)
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         """
         This will take a dashboardId and create a new dashboard object
         :param request:
@@ -48,6 +48,10 @@ class DashboardViewSet(APIView):
         """
 
         dashboard_dict = request.data
+        try:
+            dashboard_dict['name']
+        except KeyError:
+            return Response(status=status.HTTP_206_PARTIAL_CONTENT)
         try:
             dashboard = Dashboard.objects.get(id=dashboard_dict['id'])
             dashboard.title = dashboard_dict['name']
@@ -73,17 +77,17 @@ class QueryViewSet(APIView):
             except Query.DoesNotExist:
                 response = {0: {}}
                 return Response(data=response, status=status.HTTP_201_CREATED)
-            response = {query.id: {'x': query.x, 'y': query.y, 'querystring': query.querystring,
+            response = {query.id: {'x': query.x_axis, 'y': query.y_axis, 'querystring': query.querystring,
                                    'dashboard': query.dashboard} for query in all_queries}
             return Response(data=response, status=status.HTTP_201_CREATED)
 
         query = Query.objects.get(id=query_id, dashboard=dashboard_id)
 
-        response = {'query': {'id': query.id, 'x': query.x, 'y': query.y, 'querystring': query.querystring,
-                              'dashboard': query.dashboard}}
+        response = {'query': {'id': query.id, 'x': query.x_axis, 'y': query.y_axis, 'querystring': query.querystring,
+                              'dashboard': query.dashboard.id}}
         return Response(data=response, status=status.HTTP_201_CREATED)
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         """
         This will take a dashboardId and create a new dashboard object
         :param request:
@@ -91,15 +95,21 @@ class QueryViewSet(APIView):
         """
 
         query_dict = request.data
+        query_id = kwargs.get('query_id')
+        dashboard_id = kwargs.get('dashboard_id')
         try:
-            query = Dashboard.objects.get(id=query_dict['query_id'])
-            query.x = query_dict['x']
-            query.y = query_dict['y']
+            dashboard = Dashboard.objects.get(id=dashboard_id)
+        except Dashboard.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            query = Query.objects.get(id=query_id)
+            query.x_axis = query_dict['x']
+            query.y_axis = query_dict['y']
             query.querystring = query_dict['querystring']
-            query.dashboard = query_dict['dashbaord_id']
-            query.save(update_fields=['x', 'y', 'querystring', 'dashboard_id'])
+            query.dashboard = dashboard
+            query.save(update_fields=['x_axis', 'y_axis', 'querystring', 'dashboard'])
         except Query.DoesNotExist:
-            Dashboard.objects.create(x=query_dict['x'], y=query_dict['y'],
-                                     querystring=query_dict['querystring'], dashboard=query_dict['dashboard'])
+            Query.objects.create(id=query_id, x_axis=query_dict['x'], y_axis=query_dict['y'],
+                                 querystring=query_dict['querystring'], dashboard=dashboard)
 
         return Response(status=status.HTTP_201_CREATED)
