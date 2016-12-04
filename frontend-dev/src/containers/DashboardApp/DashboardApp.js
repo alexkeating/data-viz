@@ -1,6 +1,6 @@
 import React from 'react';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
-
+import DisplayTable from '../DisplayTable/DisplayTable'
 import './dashboard_app.css'
 import {findMaxId} from '../../helpers';
 
@@ -135,11 +135,14 @@ class DashboardApp extends React.Component {
                        className="btn btn-default pull-right button-add-query">
                         <span>Add Query</span>
                     </a>
-
                 </div>
-
-
-
+                <div className="container pre-scrollable">
+                    {
+                        Object.keys(this.state.queries)
+                               .map(key => <DisplayTable key={key}
+                                                         results={this.state.queries[key].results}/>)
+                    }
+                </div>
             </div>
         )
     }

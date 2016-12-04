@@ -11,23 +11,28 @@ class RunQueryViewSet(APIView):
     Queries your database
     """
 
-    def post(self, request, **kwargs):
+    def post(self, request):
         """
         This will use the query params which are a database string and the the raw
         sql of the desired query
         :param request:
         :return:
         """
-        query = request.query_params.dict()
+        query_dict = request.query_params.dict()
+        json = {'results': self.run_query(query=query_dict.get('q_string'))}
+        return Response(data=json, status=status.HTTP_201_CREATED)
+
+    @staticmethod
+    def run_query(query):
 
         engine = create_engine(os.getenv('DATABASE_CONNECTION'))
         connection = engine.connect()
-        result = connection.execute("{query}".format(query=query.get('q_string')))
+        result = connection.execute("{query}".format(query=query))
         print "executed query"
-        json = {'results': [dict(row.items()) for row in result]}
+        json = [dict(row.items()) for row in result]
         connection.close()
 
-        return Response(data=json, status=status.HTTP_201_CREATED)
+        return json
 
 
 class DashboardViewSet(APIView):
@@ -62,7 +67,7 @@ class DashboardViewSet(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-class QueryViewSet(APIView):
+class QueryViewSet(RunQueryViewSet):
     """
     Queries your database
     """
@@ -72,13 +77,14 @@ class QueryViewSet(APIView):
         dashboard_id = kwargs.get('dashboard_id')
         query_id = kwargs.get('query_id')
         if not query_id:
-            try:
-                all_queries = Query.objects.get(dashboard=dashboard_id)
-            except Query.DoesNotExist:
+            # this is for when I want to get all queries for a dashborad
+            all_queries = Query.objects.filter(dashboard=dashboard_id)
+            if not all_queries:
                 response = {0: {}}
                 return Response(data=response, status=status.HTTP_201_CREATED)
             response = {query.id: {'x': query.x_axis, 'y': query.y_axis, 'querystring': query.querystring,
-                                   'dashboard': query.dashboard} for query in all_queries}
+                                   'dashboard': query.dashboard.id, 'results': self.run_query(query=query.querystring)}
+                        for query in all_queries}
             return Response(data=response, status=status.HTTP_201_CREATED)
 
         query = Query.objects.get(id=query_id, dashboard=dashboard_id)
