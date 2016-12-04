@@ -71,7 +71,7 @@ class QueryViewSet(APIView):
             try:
                 all_queries = Query.objects.get(dashboard=dashboard_id)
             except Query.DoesNotExist:
-                response = {'queries': {}}
+                response = {0: {}}
                 return Response(data=response, status=status.HTTP_201_CREATED)
             response = {query.id: {'x': query.x, 'y': query.y, 'querystring': query.querystring,
                                    'dashboard': query.dashboard} for query in all_queries}

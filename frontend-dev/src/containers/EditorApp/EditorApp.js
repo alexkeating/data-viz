@@ -69,8 +69,8 @@ class App extends Component {
         // How do I make this more reusable
         // Is having the url params safe
 
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard';
-        const dashboardId = Math.max(...Object.keys(this.props.dashboards).map(key => parseInt(key)));
+        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
+        const dashboardId = Math.max(...Object.keys(this.state.dashboards).map(key => parseInt(key)));
         const data = JSON.stringify({
             id: dashboardId,
             name: this.state.name,
@@ -80,7 +80,7 @@ class App extends Component {
             method: 'post',
             body: data,
             headers: {
-                 Accept: 'application/json',
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
         })
@@ -90,7 +90,7 @@ class App extends Component {
 
      getAllDashboards () {
 
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard';
+        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
 
         fetch(url)
             .then(response => response.json())

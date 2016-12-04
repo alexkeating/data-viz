@@ -2,6 +2,7 @@ import React from 'react';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
 
 import './dashboard_app.css'
+import {findMaxId} from '../../helpers';
 
 // TODO
 //      2. Hook up query button to redirect create adn save a query
@@ -17,25 +18,28 @@ class DashboardApp extends React.Component {
         this.dataChanged = this.dataChanged.bind(this);
         this.postNewDashboard = this.postNewDashboard.bind(this);
         this.getAllDashboards = this.getAllDashboards.bind(this);
+        this.getAllqueries = this.getAllqueries.bind(this);
 
         this.state = {
             name: 'Untitled Dashboard',
             clicked: false,
             inputClass: 'title-unselected',
             dashboards: {},
+            queries: {0: {}},
 
         };
     }
 
     componentWillMount() {
         this.getAllDashboards();
+        this.getAllqueries ();
     };
 
     postNewDashboard () {
         // How do I make this more reusable
         // Is having the url params safe
 
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard';
+        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
         const { dashboardId } = this.props.params;
         const data = JSON.stringify({
             id: dashboardId,
@@ -46,8 +50,8 @@ class DashboardApp extends React.Component {
             method: 'post',
             body: data,
             headers: {
-                 Accept: 'application/json',
-                'Content-Type': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
         })
             .then(response => response.json())
@@ -56,7 +60,7 @@ class DashboardApp extends React.Component {
 
     getAllDashboards () {
 
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard';
+        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
         const {dashboardId} = this.props.params;
 
         fetch(url)
@@ -64,6 +68,20 @@ class DashboardApp extends React.Component {
             .then(json => this.setState({
                 dashboards:  json,
                 name: json[dashboardId].name
+            }))
+            .catch((error) => console.log(error))
+
+    }
+
+     getAllqueries () {
+
+        const {dashboardId} = this.props.params;
+        const url = `http://127.0.0.1:8000/api/v1/dashboard/${dashboardId}/query/`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(json => this.setState({
+                queries:  json,
             }))
             .catch((error) => console.log(error))
 
@@ -113,7 +131,11 @@ class DashboardApp extends React.Component {
                            onChange={this.dataChanged}
                            onClick={() => this.clickChanged('true')}
                            onBlur={() => this.clickChanged('false')}/>
-                    <span className="btn btn-default pull-right button-add-query">Add Query</span>
+                    <a href={`${this.props.params.dashboardId}/query/${findMaxId(this.state.queries) + 1}/`}
+                       className="btn btn-default pull-right button-add-query">
+                        <span>Add Query</span>
+                    </a>
+
                 </div>
 
 
