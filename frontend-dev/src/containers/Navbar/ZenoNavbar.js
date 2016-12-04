@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navbar, NavItem, MenuItem, NavDropdown, Nav } from 'react-bootstrap';
+import url from './database.svg';
 
 class ZenoNavbar extends React.Component {
     constructor(){
@@ -38,7 +39,7 @@ class ZenoNavbar extends React.Component {
                             Add Dashboard
                         </NavItem>
                         <Navbar.Brand href="#">
-                            <img src="/images/database.svg"/>
+                            <img src={url} role="presentation"/>
                         </Navbar.Brand>
                     </Nav>
                 </Navbar.Collapse>

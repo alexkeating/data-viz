@@ -1,8 +1,9 @@
 /**
  * Created by alexander on 26/11/2016.
  */
-import React from 'react'
-import JsonTable from 'react-json-table'
+import React from 'react';
+import JsonTable from 'react-json-table';
+import url from './pencil.svg';
 
 
 class DisplayTable extends React.Component {
@@ -30,8 +31,17 @@ class DisplayTable extends React.Component {
 
     render () {
         return (
-            <JsonTable className="table-bordered table-responsive white-bg text-black"
-                       rows={this.limitArray(this.props.results)}/>
+            <div className="container">
+                <div className="container pre-scrollable">
+                    <JsonTable className="table-bordered table-responsive white-bg text-black"
+                               rows={this.limitArray(this.props.results)}/>
+                </div>
+                <div className="row">
+                    <a className="btn btn-default" href={`${this.props.dashboardId}/query/${this.props.queryId}`}>
+                        <span>Edit</span>
+                    </a>
+                </div>
+            </div>
         );
     }
 }

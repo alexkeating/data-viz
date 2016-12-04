@@ -5,11 +5,12 @@ import './dashboard_app.css'
 import {findMaxId} from '../../helpers';
 
 // TODO
-//      2. Hook up query button to redirect create adn save a query
-//      3. Display _Table2
+//      2. Hook up query button to redirect create adn save a query - done
+//      3. Display _Table2 - done
 //      4. Support line and bar charts
-//      5. Clean up styling
-//      6. Make charts draggable
+//      5. Create an App.js to be DRY
+//      6. Clean up styling
+//      7. Make charts draggable
 //     Redux/flux?
 class DashboardApp extends React.Component {
 
@@ -136,11 +137,13 @@ class DashboardApp extends React.Component {
                         <span>Add Query</span>
                     </a>
                 </div>
-                <div className="container pre-scrollable">
+                <div className="container">
                     {
                         Object.keys(this.state.queries)
                                .map(key => <DisplayTable key={key}
-                                                         results={this.state.queries[key].results}/>)
+                                                         results={this.state.queries[key].results}
+                                                         queryId={key}
+                                                         dashboardId={this.state.queries[key].dashboard}/>)
                     }
                 </div>
             </div>
