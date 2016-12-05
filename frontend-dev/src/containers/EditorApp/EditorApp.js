@@ -13,7 +13,6 @@ class App extends Component {
 
         this.sendRequest = this.sendRequest.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.getAllDashboards = this.getAllDashboards.bind(this);
         this.postNewQuery = this.postNewQuery.bind(this);
         this.getQuery = this.getQuery.bind(this);
 
@@ -21,7 +20,6 @@ class App extends Component {
             results: [],
             querystring: '',
             showTable: false,
-            dashboards: {},
             x: '',
             y: '',
             query: {},
@@ -29,7 +27,7 @@ class App extends Component {
     }
 
     componentWillMount() {
-        this.getAllDashboards();
+        this.props.getAllDashboards(this.props.params.dashboardId);
         this.getQuery();
     }
 
@@ -51,29 +49,6 @@ class App extends Component {
                     showTable: true,
                 })
             })
-            .catch((error) => console.log(error))
-    }
-
-    postNewDashboard () {
-        // How do I make this more reusable
-        // Is having the url params safe
-
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
-        const dashboardId = Math.max(...Object.keys(this.state.dashboards).map(key => parseInt(key)));
-        const data = JSON.stringify({
-            id: dashboardId,
-            name: this.state.name,
-        });
-
-        fetch(url, {
-            method: 'post',
-            body: data,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then(response => response.json())
             .catch((error) => console.log(error))
     }
 
@@ -100,19 +75,6 @@ class App extends Component {
             .catch((error) => console.log(error))
     }
 
-     getAllDashboards () {
-
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
-
-        fetch(url)
-            .then(response => response.json())
-            .then(json => this.setState({
-                dashboards:  json,
-            }))
-            .catch((error) => console.log(error))
-
-    }
-
     getQuery () {
         const {dashboardId, queryId} = this.props.params;
         const url = `http://127.0.0.1:8000/api/v1/dashboard/${dashboardId}/query/${queryId}`;
@@ -137,7 +99,9 @@ class App extends Component {
         return (
             <div className="btn-warning container-fluid">
                 <div className="row">
-                    <ZenoNavbar dashboards={this.state.dashboards} createDashboard={this.postNewDashboard()}/>
+                    <ZenoNavbar dashboards={this.props.dashboards}
+                                createDashboard={this.props.postNewDashboard}
+                                dashboardId={this.props.params.dashboardId}/>
                 </div>
                 <div className="row shift-content">
                     <h1 className="text-center">Zeno</h1>

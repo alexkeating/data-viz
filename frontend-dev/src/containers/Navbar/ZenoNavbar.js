@@ -35,7 +35,7 @@ class ZenoNavbar extends React.Component {
                         </NavDropdown>
                     </Nav>
                     <Nav pullRight>
-                        <NavItem onClick={this.props.createDashboard} href={'/' + this.dashboardRedirectUrl()}>
+                        <NavItem onClick={ this.props.createDashboard(this.props.dashboardId)} href={'/' + this.dashboardRedirectUrl()}>
                             Add Dashboard
                         </NavItem>
                         <Navbar.Brand href="#">
