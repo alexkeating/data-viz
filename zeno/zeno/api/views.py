@@ -25,6 +25,9 @@ class RunQueryViewSet(APIView):
     @staticmethod
     def run_query(query):
 
+        if not query:
+            return [{}]
+
         engine = create_engine(os.getenv('DATABASE_CONNECTION'))
         connection = engine.connect()
         result = connection.execute("{query}".format(query=query))

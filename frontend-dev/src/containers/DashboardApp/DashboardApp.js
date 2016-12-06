@@ -12,6 +12,8 @@ import {findMaxId} from '../../helpers';
 //      6. Support line and bar charts
 //      7. Clean up styling
 //      8. Make charts draggable
+
+//  manageing fetch in the lifecycle asynchrounous stuff, errors in console?, reverse url
 //     Redux/flux?
 class DashboardApp extends React.Component {
 
@@ -31,6 +33,10 @@ class DashboardApp extends React.Component {
     componentWillMount () {
         this.props.getAllDashboards(this.props.params.dashboardId);
         this.getAllqueries();
+
+    }
+
+    componentDidMount () {
         this.props.setDashboardName(this.props.params.dashboardId);
     }
 

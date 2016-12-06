@@ -5,6 +5,7 @@ import EditorApp from './EditorApp/EditorApp';
 import ChartSetting from './ChartSetting/ChartSetting';
 import DashboardApp from './DashboardApp/DashboardApp';
 import Error from './Error/Error';
+import {api, serverUrl} from '../api';
 
 class PeriscopeApp extends React.Component {
     constructor () {
@@ -13,6 +14,7 @@ class PeriscopeApp extends React.Component {
         this.postNewDashboard = this.postNewDashboard.bind(this);
         this.dataChanged = this.dataChanged.bind(this);
         this.setDashboardName = this.setDashboardName.bind(this);
+        this.changeState = this.changeState.bind(this);
 
         this.state = {
              dashboards: {},
@@ -20,42 +22,17 @@ class PeriscopeApp extends React.Component {
         };
     }
 
+
+
     getAllDashboards(dashboardId) {
-        // breaks when you create a new dashboard
-
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
-
-
-        fetch(url)
-            .then(response => response.json())
-            .then(json => this.setState((prevState, props) => ({
-                dashboards: json,
-                dashboardName: json[dashboardId].name
-            })))
-            .catch((error) => console.log(error))
+        api('GET', `${serverUrl}api/v1/dashboard/`, {dashboards: undefined},
+            this.changeState)
     }
 
     postNewDashboard(dashboardId) {
-        // How do I make this more reusable
-        // Is having the url params safe
-
-        const url = 'http://127.0.0.1:8000/api/v1/dashboard/';
-        const data = JSON.stringify({
-            id: dashboardId,
-            name: this.state.dashboardName,
-        });
-
-        fetch(url, {
-            method: 'post',
-            body: data,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .catch((error) => console.log(error))
+        api('POST', `${serverUrl}api/v1/dashboard/`, {id: dashboardId, name: this.state.dashboardName,})
     }
+
 
     setDashboardName (dashboardId) {
         if (Object.keys(this.state.dashboards).includes(dashboardId)) {
@@ -67,6 +44,20 @@ class PeriscopeApp extends React.Component {
         }
         return this.state.dashboardName
 
+    }
+
+    changeState(json, data) {
+        let newState = {};
+        for (let [key, value] of Object.entries(data)) {
+            // console.log(key + ':' + value);
+            if (value != undefined) {
+                newState[key] = json[value];
+            }
+            else {
+                newState[key] = json
+            }
+        }
+        this.setState(newState);
     }
 
     dataChanged(event) {
