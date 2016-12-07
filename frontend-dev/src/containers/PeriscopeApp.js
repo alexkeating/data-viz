@@ -23,7 +23,7 @@ class PeriscopeApp extends React.Component {
 
     getAllDashboards(dashboardId) {
         const data = {dashboards: undefined};
-        api('GET', `${serverUrl}api/v1/dashboard/`, data)
+        api('GET', `${serverUrl}/api/v1/dashboard/`, data)
             .then(response => response.json())
             .then(json => this.setState({
                 dashboards: json,
@@ -32,7 +32,7 @@ class PeriscopeApp extends React.Component {
 
     postNewDashboard(dashboardId) {
         if (!_.isEmpty(this.state.dashboards)) {
-            api('POST', `${serverUrl}api/v1/dashboard/`, {id: dashboardId, name: this.state.dashboards[dashboardId].name,})
+            api('POST', `${serverUrl}/api/v1/dashboard/`, {id: dashboardId, name: this.state.dashboards[dashboardId].name,})
         }
     }
 
@@ -62,8 +62,7 @@ class PeriscopeApp extends React.Component {
                                 passProps={{dashboards: this.state.dashboards,
                                             getAllDashboards: this.getAllDashboards,
                                             postNewDashboard: this.postNewDashboard,
-                                            dataChanged: this.dataChanged,
-                                            name: this.state.dashboardName}}/>
+                                            dataChanged: this.dataChanged}}/>
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/query/:queryId/"
                                 component={EditorApp}
                                 passProps={{dashboards: this.state.dashboards,
