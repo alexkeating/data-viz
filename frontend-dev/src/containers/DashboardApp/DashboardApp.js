@@ -1,6 +1,7 @@
 import React from 'react';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
-import DisplayTable from '../DisplayTable/DisplayTable'
+import DisplayTable from '../DisplayTable/DisplayTable';
+import LineGraph from '../LineGraph/LineGraph';
 import './dashboard_app.css'
 import {findMaxId} from '../../helpers';
 import _ from 'lodash';
@@ -88,6 +89,13 @@ class DashboardApp extends React.Component {
                                                          results={this.state.queries[key].results}
                                                          queryId={key}
                                                          dashboardId={this.state.queries[key].dashboard}/>)
+                    }
+                </div>
+                <div className="container white-bg">
+                    {
+                        Object.keys(this.state.queries)
+                               .map(key => <LineGraph key={key}
+                                                      data={[{'x': 1, 'y': 2}, {'x': 2, 'y': 7}]}/>)
                     }
                 </div>
             </div>
