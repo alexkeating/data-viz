@@ -2,7 +2,7 @@
 
 export const serverUrl = `http://127.0.0.1:8000/`;
 
-export const api = (method, apiEndpoint, data, stateFunction) => {
+export const api = (method, apiEndpoint, data) => {
     // How to how work with asynchronous code?
     // lots of errors
 
@@ -16,20 +16,23 @@ export const api = (method, apiEndpoint, data, stateFunction) => {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
-                .then(response => Promise.all([response, response.json()]))
-                .then(handleErrors);
+            }).then(handleErrors);
         case 'GET':
-            fetch(`${apiEndpoint}`)
-                .then(response => response.json())
-                .then(json => stateFunction(json, data))
-                .then(handleErrors)
+            return fetch(`${apiEndpoint}`, {
+                method,
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }).then(handleErrors)
     }
 };
 
-function handleErrors([response, json]) {
+function handleErrors(response) {
     if (!response.ok) {
-        throw json;
+        throw new Error({
+            'message': 'Error happened',
+        })
     }
-    return json;
+    return response;
 }

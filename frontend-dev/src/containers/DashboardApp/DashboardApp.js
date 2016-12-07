@@ -3,7 +3,7 @@ import ZenoNavbar from '../Navbar/ZenoNavbar';
 import DisplayTable from '../DisplayTable/DisplayTable'
 import './dashboard_app.css'
 import {findMaxId} from '../../helpers';
-
+import _ from 'lodash';
 // TODO
 //      2. Hook up query button to redirect create adn save a query - done
 //      3. Display _Table2 - done
@@ -17,8 +17,8 @@ import {findMaxId} from '../../helpers';
 //     Redux/flux?
 class DashboardApp extends React.Component {
 
-    constructor () {
-        super();
+    constructor (props) {
+        super(props);
         this.getAllqueries = this.getAllqueries.bind(this);
 
 
@@ -34,10 +34,6 @@ class DashboardApp extends React.Component {
         this.props.getAllDashboards(this.props.params.dashboardId);
         this.getAllqueries();
 
-    }
-
-    componentDidMount () {
-        this.props.setDashboardName(this.props.params.dashboardId);
     }
 
      getAllqueries () {
@@ -58,38 +54,27 @@ class DashboardApp extends React.Component {
         // data = { description: "New validated text comes here" }
         // Update your model from here
 
-        if (click === 'true') {
-            console.log('click');
-            this.setState({
-                clicked: true,
-                inputClass: 'title-selected'
-            });
-
-        }
-
-        else {
-            console.log('unclicked');
-            this.setState({
-                clicked: false,
-                inputClass: 'title-unselected',
-            });
             this.props.postNewDashboard(this.props.params.dashboardId)
-        }
 
     }
 
 
     render() {
+        const currentDashboard = _.get(
+            this.props.dashboards,
+            this.props.params.dashboardId,
+            { name: 'Unitled Dashboard' }
+        );
+        console.log(this.props.dashboards, this.props.params.dashboardId);
         return (
             <div className="container">
                 <ZenoNavbar dashboards={this.props.dashboards}
                             createDashboard={this.props.postNewDashboard}
                             dashboardId={this.props.params.dashboardId}/>
                 <div className="row shift-content text-black">
-                    <input type="text" value={this.props.name}
+                    <input type="text" value={currentDashboard.name}
                            className={this.state.inputClass}
-                           onChange={(e) => this.props.dataChanged(e)}
-                           onClick={() => this.clickChanged('true')}
+                           onChange={(e) => this.props.dataChanged(e, this.props.params.dashboardId)}
                            onBlur={() => this.clickChanged('false')}/>
                     <a href={`${this.props.params.dashboardId}/query/${findMaxId(this.state.queries) + 1}/`}
                        className="btn btn-default pull-right button-add-query">
