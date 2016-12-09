@@ -6,7 +6,7 @@ import JsonTable from 'react-json-table';
 import url from './pencil.svg';
 
 
-class DisplayTable extends React.Component {
+class DisplayJsonTable extends React.Component {
     constructor () {
         super ();
         this.limitArray = this.limitArray.bind(this);
@@ -46,4 +46,4 @@ class DisplayTable extends React.Component {
     }
 }
 
-export default DisplayTable;
+export default DisplayJsonTable;

@@ -68,7 +68,6 @@ class PeriscopeApp extends React.Component {
                                 passProps={{dashboards: this.state.dashboards,
                                             getAllDashboards: this.getAllDashboards,
                                             postNewDashboard: this.postNewDashboard}}/>
-                <Match exactly pattern="/settings" component={ChartSetting}/>
                 <Miss component={Error}/>
             </div>
         )

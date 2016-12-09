@@ -1,16 +1,21 @@
 import React from 'react';
 import { Navbar, NavItem, MenuItem, NavDropdown, Nav } from 'react-bootstrap';
 
-class ChartNavbar extends React.Component {
-    render() {
-        return (
-            <Nav activeKey="1" onSelect={this.handleSelect} className="nav-pills white-bg text-black">
-                <NavItem eventKey="1" href="/">Query</NavItem>
-                <NavItem eventKey="2" href="/settings">Settings</NavItem>
-                <NavItem eventKey="3" href="/series">Series</NavItem>
-            </Nav>
-        )
-    }
-}
+const ChartNavbar = ({ activeKey, handleSelect }) => (
+    <Nav activeKey={activeKey} onSelect={handleSelect} className="nav-pills white-bg text-black">
+        <NavItem eventKey="1">Query</NavItem>
+        <NavItem eventKey="2">Settings</NavItem>
+        <NavItem eventKey="3">Series</NavItem>
+    </Nav>
+);
+
+ChartNavbar.defaultProps = {
+    activeKey: "1",
+};
+
+ChartNavbar.propTypes = {
+    activeKey: React.PropTypes.string,
+    handleSelect: React.PropTypes.func.isRequired,
+};
 
 export default ChartNavbar;

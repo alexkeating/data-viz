@@ -1,6 +1,7 @@
 import React from 'react';
 import ChartNavbar from '../ChartNavbar/ChartNavbar';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
+import Table from '../Table/Table';
 
 class ChartSetting extends React.Component {
     render() {
@@ -9,12 +10,8 @@ class ChartSetting extends React.Component {
                 <ZenoNavbar />
                 <div className="shift-content">
                     <ChartNavbar />
-                    <table>
-                        <tr>
-                            test
-                        </tr>
-
-                    </table>
+                    <Table columns={['Name','X Axis', 'Y Axis', 'Chart Type']}
+                           rows={{'what': 'ho'}}/>
                 </div>
             </div>
 

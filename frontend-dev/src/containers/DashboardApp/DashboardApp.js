@@ -1,6 +1,6 @@
 import React from 'react';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
-import DisplayTable from '../DisplayTable/DisplayTable';
+import DisplayJsonTable from '../DisplayJsonTable/DisplayJsonTable';
 import LineGraph from '../LineGraph/LineGraph';
 import './dashboard_app.css'
 import {findMaxId} from '../../helpers';
@@ -85,7 +85,7 @@ class DashboardApp extends React.Component {
                 <div className="container">
                     {
                         Object.keys(this.state.queries)
-                               .map(key => <DisplayTable key={key}
+                               .map(key => <DisplayJsonTable key={key}
                                                          results={this.state.queries[key].results}
                                                          queryId={key}
                                                          dashboardId={this.state.queries[key].dashboard}/>)
