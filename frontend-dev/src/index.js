@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import PeriscopeApp from './containers/PeriscopeApp'
 import EditorApp from './containers/EditorApp/EditorApp';
-import ChartSetting from './containers/ChartSetting/ChartSetting';
 import DashboardApp from './containers/DashboardApp/DashboardApp';
 import Error from './containers/Error/Error';
 

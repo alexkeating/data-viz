@@ -2,7 +2,6 @@ import React from 'react';
 import { Match, Miss } from 'react-router';
 
 import EditorApp from './EditorApp/EditorApp';
-import ChartSetting from './ChartSetting/ChartSetting';
 import DashboardApp from './DashboardApp/DashboardApp';
 import Error from './Error/Error';
 import {api, serverUrl} from '../api';

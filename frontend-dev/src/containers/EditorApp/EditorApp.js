@@ -4,7 +4,7 @@ import Editor from '../Editor/Editor';
 import DisplayJsonTable from '../DisplayJsonTable/DisplayJsonTable';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
 import ChartNavbar from '../ChartNavbar/ChartNavbar';
-import Table from '../Table/Table';
+import LineGraph from '../LineGraph/LineGraph'
 import Select from 'react-select';
 import _ from 'lodash';
 
@@ -25,6 +25,7 @@ class EditorApp extends Component {
         this.changeTypeValue = this.changeTypeValue.bind(this);
         this.postNewQuery = this.postNewQuery.bind(this);
         this.getQuery = this.getQuery.bind(this);
+        this.getAxisValues = this.getAxisValues.bind(this);
 
         this.state = {
             results: [],
@@ -33,7 +34,7 @@ class EditorApp extends Component {
             x: '',
             y: '',
             query: {},
-            chartType: '',
+            chartType: 0,
             activeMenuKey: "1",
         };
     }
@@ -81,6 +82,20 @@ class EditorApp extends Component {
 
     }
 
+    getAxisValues (row) {
+        let x;
+        let y;
+        let newRow = {};
+        x = _.get(row, this.state.x);
+        y = _.get(row, this.state.y);
+
+        newRow[this.state.x] = x;
+        newRow[this.state.y] = y;
+
+        return newRow
+
+    }
+
     handleChange(event) {
         this.setState({querystring: event.target.value});
     }
@@ -99,6 +114,7 @@ class EditorApp extends Component {
 
 
     render() {
+        /// Set chart settings, whether it is a bar or line chart
         let activeComponent;
         switch (this.state.activeMenuKey) {
 
@@ -130,11 +146,34 @@ class EditorApp extends Component {
                             <h5>Chart Type</h5>
                             <Select name="form-field-name"
                                     value={this.state.chartType}
-                                    options={['Line', 'Bar', 'Table'].map((key, index) => {return {'value': index, 'label': key}})}
+                                    options={['Table','Line', 'Bar'].map((key, index) => {return {'value': index, 'label': key}})}
                                     onChange={this.changeTypeValue}/>
                         </div>
                     )
                 }
+                break;
+        }
+
+        let chart;
+        switch (this.state.chartType) {
+            case 0: {
+                chart = (
+                    <div className="container pre-scrollable">
+                        {this.state.results ? <DisplayJsonTable results={this.state.results}/> : <span />}
+                    </div>
+                )
+                break;
+            }
+            case 1:
+                chart = (
+                    <div className="white-bg">
+                        {this.state.results ? <LineGraph y={this.state.y}
+                                                         x={this.state.x}
+                                                         data={this.state.results.map((row) =>
+                                                         this.getAxisValues(row))}/>
+                            : <span />}
+                    </div>
+                )
                 break;
         }
 
@@ -159,9 +198,7 @@ class EditorApp extends Component {
                     {activeComponent}
                 </div>
                 <span>Results: {this.state.results.length}</span>
-                <div className="container pre-scrollable">
-                    {this.state.showTable ?  <DisplayJsonTable results={this.state.results}/> : <span />}
-                </div>
+                {chart}
             </div>
         )
     }
