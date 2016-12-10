@@ -156,7 +156,7 @@ class EditorApp extends Component {
             case 0: {
                 chart = (
                     <div className="container pre-scrollable">
-                        {this.state.results ? <DisplayJsonTable results={this.state.results}/> : <span />}
+                        {this.state.results ? <DisplayJsonTable data={this.state.results}/> : <span />}
                     </div>
                 );
                 break;

@@ -1,8 +1,8 @@
 import React from 'react';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
-import DisplayJsonTable from '../DisplayJsonTable/DisplayJsonTable';
-import LineGraph from '../LineGraph/LineGraph';
-import './dashboard_app.css'
+import DisplayChart from '../DisplayChart/DisplayChart';
+
+import './dashboard_app.css';
 import {findMaxId} from '../../helpers';
 import _ from 'lodash';
 // TODO
@@ -66,7 +66,7 @@ class DashboardApp extends React.Component {
             this.props.params.dashboardId,
             { name: 'Unitled Dashboard' }
         );
-        console.log(this.props.dashboards, this.props.params.dashboardId);
+
         return (
             <div className="container">
                 <ZenoNavbar dashboards={this.props.dashboards}
@@ -82,20 +82,16 @@ class DashboardApp extends React.Component {
                         <span>Add Query</span>
                     </a>
                 </div>
-                <div className="container">
-                    {
-                        Object.keys(this.state.queries)
-                               .map(key => <DisplayJsonTable key={key}
-                                                         results={this.state.queries[key].results}
-                                                         queryId={key}
-                                                         dashboardId={this.state.queries[key].dashboard}/>)
-                    }
-                </div>
                 <div className="container white-bg">
                     {
                         Object.keys(this.state.queries)
-                               .map(key => <LineGraph key={key}
-                                                      data={[{'x': 1, 'y': 2}, {'x': 2, 'y': 7}]}/>)
+                               .map(key => <DisplayChart key={key}
+                                                         results={this.state.queries[key].results}
+                                                         queryId={key}
+                                                         x={this.state.queries[key].x}
+                                                         y={this.state.queries[key].y}
+                                                         chartType={this.state.queries[key].chart_type}
+                                                         dashboard={this.state.queries[key].dashboard}/>)
                     }
                 </div>
             </div>

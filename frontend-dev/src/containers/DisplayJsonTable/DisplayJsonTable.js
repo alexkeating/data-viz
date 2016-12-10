@@ -34,12 +34,7 @@ class DisplayJsonTable extends React.Component {
             <div className="container">
                 <div className="container pre-scrollable">
                     <JsonTable className="table-bordered table-responsive white-bg text-black"
-                               rows={this.limitArray(this.props.results)}/>
-                </div>
-                <div className="row">
-                    <a className="btn btn-default" href={`${this.props.dashboardId}/query/${this.props.queryId}`}>
-                        <span>Edit</span>
-                    </a>
+                               rows={this.limitArray(this.props.data)}/>
                 </div>
             </div>
         );
