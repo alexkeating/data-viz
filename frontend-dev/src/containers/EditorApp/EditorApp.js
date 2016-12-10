@@ -4,8 +4,9 @@ import Editor from '../Editor/Editor';
 import DisplayJsonTable from '../DisplayJsonTable/DisplayJsonTable';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
 import ChartNavbar from '../ChartNavbar/ChartNavbar';
-import LineGraph from '../LineGraph/LineGraph'
-import Select from 'react-select';
+import LineGraph from '../LineGraph/LineGraph';
+import BarGraph from '../BarGraph/BarGraph'
+import ChartSetting from '../ChartSetting/ChartSetting';
 import _ from 'lodash';
 
 import 'whatwg-fetch';
@@ -20,9 +21,7 @@ class EditorApp extends Component {
 
         this.postQuerystring = this.postQuerystring.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.changeYValue = this.changeYValue.bind(this);
-        this.changeXValue = this.changeXValue.bind(this);
-        this.changeTypeValue = this.changeTypeValue.bind(this);
+        this.changeValue = this.changeValue.bind(this);
         this.postNewQuery = this.postNewQuery.bind(this);
         this.getQuery = this.getQuery.bind(this);
         this.getAxisValues = this.getAxisValues.bind(this);
@@ -61,6 +60,7 @@ class EditorApp extends Component {
         const data = {
             x: this.state.x,
             y: this.state.y,
+            chart_type: this.state.chartType,
             querystring: this.state.querystring,
         };
 
@@ -77,6 +77,9 @@ class EditorApp extends Component {
             .then(response => response.json())
             .then(json => this.setState({
                 query:  json,
+                x: json.query.x,
+                y: json.query.y,
+                chartType: json.query.chart_type,
                 querystring: json.query.querystring,
             }))
 
@@ -100,16 +103,21 @@ class EditorApp extends Component {
         this.setState({querystring: event.target.value});
     }
 
-     changeYValue(value) {
-        this.setState({y: value.value});
-    }
+     changeValue(value) {
+         switch (value.state) {
+             case "y": {
+                 this.setState({y: value.value});
+                 break
+             }
+             case "x": {
+                  this.setState({x: value.value});
+                 break
+             }
+             case "chartType": {
+                 this.setState({chartType: value.value});
+             }
+         }
 
-    changeXValue(value) {
-        this.setState({x: value.value});
-    }
-
-    changeTypeValue(value) {
-        this.setState({chartType: value.value});
     }
 
 
@@ -124,7 +132,7 @@ class EditorApp extends Component {
                          sendRequest={this.postQuerystring}
                          handleChange={this.handleChange}
                          querystring={this.state.querystring}
-                         saveQuerystring={this.postNewQuery()}
+                         saveQuerystring={this.postNewQuery}
                      />
                 );
                 break;
@@ -132,28 +140,17 @@ class EditorApp extends Component {
 
             case "2": {
                     activeComponent = (
-                        <div>
-                            <h5>Y Axis</h5>
-                            <Select name="form-field-name"
-                                    value={this.state.y}
-                                    options={Object.keys(this.state.results[0]).map((key) => {return {'value': key, 'label': key}})}
-                                    onChange={this.changeYValue}/>
-                             <h5>X Axis</h5>
-                            <Select name="form-field-name"
-                                    value={this.state.x}
-                                    options={Object.keys(this.state.results[0]).map((key) => {return {'value': key, 'label': key}})}
-                                    onChange={this.changeXValue}/>
-                            <h5>Chart Type</h5>
-                            <Select name="form-field-name"
-                                    value={this.state.chartType}
-                                    options={['Table','Line', 'Bar'].map((key, index) => {return {'value': index, 'label': key}})}
-                                    onChange={this.changeTypeValue}/>
-                        </div>
+                       <ChartSetting results={this.state.results[0]}
+                                     y={this.state.y}
+                                     x={this.state.x}
+                                     chartType={this.state.chartType}
+                                     changeValue={this.changeValue}/>
                     )
                 }
                 break;
         }
 
+        ///Charts add bar and scatter, then swap editor in, add warning for failed sql, then django channels
         let chart;
         switch (this.state.chartType) {
             case 0: {
@@ -161,20 +158,34 @@ class EditorApp extends Component {
                     <div className="container pre-scrollable">
                         {this.state.results ? <DisplayJsonTable results={this.state.results}/> : <span />}
                     </div>
-                )
+                );
                 break;
             }
-            case 1:
+            case 1: {
                 chart = (
                     <div className="white-bg">
                         {this.state.results ? <LineGraph y={this.state.y}
                                                          x={this.state.x}
                                                          data={this.state.results.map((row) =>
-                                                         this.getAxisValues(row))}/>
+                                                             this.getAxisValues(row))}/>
                             : <span />}
                     </div>
-                )
+                );
                 break;
+            }
+
+            case 2: {
+                chart = (
+                    <div className="white-bg">
+                        {this.state.results ? <BarGraph y={this.state.y}
+                                                        x={this.state.x}
+                                                        data={this.state.results.map((row) =>
+                                                             this.getAxisValues(row))}/>
+                            : <span />}
+                    </div>
+                );
+                break;
+            }
         }
 
 

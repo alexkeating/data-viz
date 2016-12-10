@@ -85,15 +85,16 @@ class QueryViewSet(RunQueryViewSet):
             if not all_queries:
                 response = {0: {}}
                 return Response(data=response, status=status.HTTP_201_CREATED)
-            response = {query.id: {'x': query.x_axis, 'y': query.y_axis, 'querystring': query.querystring,
-                                   'dashboard': query.dashboard.id, 'results': self.run_query(query=query.querystring)}
+            response = {query.id: {'x': query.x_axis, 'y': query.y_axis, 'chart_type': query.chart_type,
+                                   'querystring': query.querystring, 'dashboard': query.dashboard.id,
+                                   'results': self.run_query(query=query.querystring)}
                         for query in all_queries}
             return Response(data=response, status=status.HTTP_201_CREATED)
 
         query = Query.objects.get(id=query_id, dashboard=dashboard_id)
 
-        response = {'query': {'id': query.id, 'x': query.x_axis, 'y': query.y_axis, 'querystring': query.querystring,
-                              'dashboard': query.dashboard.id}}
+        response = {'query': {'id': query.id, 'x': query.x_axis, 'y': query.y_axis, 'chart_type': query.chart_type,
+                              'querystring': query.querystring, 'dashboard': query.dashboard.id}}
         return Response(data=response, status=status.HTTP_201_CREATED)
 
     def post(self, request, **kwargs):
@@ -114,11 +115,13 @@ class QueryViewSet(RunQueryViewSet):
             query = Query.objects.get(id=query_id)
             query.x_axis = query_dict['x']
             query.y_axis = query_dict['y']
+            query.chart_type = query_dict['chart_type']
             query.querystring = query_dict['querystring']
             query.dashboard = dashboard
-            query.save(update_fields=['x_axis', 'y_axis', 'querystring', 'dashboard'])
+            query.save(update_fields=['x_axis', 'y_axis', 'chart_type','querystring', 'dashboard'])
         except Query.DoesNotExist:
             Query.objects.create(id=query_id, x_axis=query_dict['x'], y_axis=query_dict['y'],
-                                 querystring=query_dict['querystring'], dashboard=dashboard)
+                                 querystring=query_dict['querystring'], chart_type=query_dict['chart_type'],
+                                 dashboard=dashboard)
 
         return Response(status=status.HTTP_201_CREATED)
