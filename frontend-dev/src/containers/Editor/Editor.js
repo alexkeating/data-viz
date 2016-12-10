@@ -1,5 +1,7 @@
 import React from 'react';
-
+import CodeMirror from 'react-codemirror';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/sql/sql';
 
 class Editor extends React.Component {
 
@@ -9,8 +11,9 @@ class Editor extends React.Component {
                 <div className="col-md-1"></div>
                 <div className="col-md-10">
                     <form>
-                        <textarea className="form-control" name="editor" cols="30" rows="10"
-                                  value={this.props.querystring} onChange={this.props.handleChange}/>
+                        <CodeMirror
+                                      value={this.props.querystring} onChange={this.props.handleChange}
+                                      options={{lineNumbers: true,readOnly: false, mode: 'text/x-sql'}}/>
                         <br />
                         <button onClick={(e) => {
                             e.preventDefault();
