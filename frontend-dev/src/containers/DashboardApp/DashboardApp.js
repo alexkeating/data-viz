@@ -6,11 +6,10 @@ import './dashboard_app.css';
 import {findMaxId} from '../../helpers';
 import _ from 'lodash';
 // TODO
-//      2. Hook up query button to redirect create adn save a query - done
-//      3. Display _Table2 - done
-//      4. Refactor to create periscope component
-//      5. Create an App.js to be DRY
-//      6. Support line and bar charts
+//         Add database form
+//         Put in live
+//         Add Channels
+//         react-grid-layout
 //      7. Clean up styling
 //      8. Make charts draggable
 
@@ -32,7 +31,6 @@ class DashboardApp extends React.Component {
     }
 
     componentWillMount () {
-        this.props.getAllDashboards(this.props.params.dashboardId);
         this.getAllqueries();
 
     }
@@ -69,9 +67,6 @@ class DashboardApp extends React.Component {
 
         return (
             <div className="container">
-                <ZenoNavbar dashboards={this.props.dashboards}
-                            createDashboard={this.props.postNewDashboard}
-                            dashboardId={this.props.params.dashboardId}/>
                 <div className="row shift-content text-black">
                     <input type="text" value={currentDashboard.name}
                            className={this.state.inputClass}

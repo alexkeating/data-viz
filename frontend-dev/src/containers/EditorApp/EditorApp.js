@@ -39,7 +39,6 @@ class EditorApp extends Component {
     }
 
     componentWillMount() {
-        this.props.getAllDashboards(this.props.params.dashboardId);
         this.getQuery();
     }
 

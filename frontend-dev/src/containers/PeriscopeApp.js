@@ -3,6 +3,8 @@ import { Match, Miss } from 'react-router';
 
 import EditorApp from './EditorApp/EditorApp';
 import DashboardApp from './DashboardApp/DashboardApp';
+import Database from './Database/Database';
+import ZenoNavbar from './Navbar/ZenoNavbar';
 import Error from './Error/Error';
 import {api, serverUrl} from '../api';
 import _ from 'lodash';
@@ -18,9 +20,11 @@ class PeriscopeApp extends React.Component {
         };
     }
 
+     componentWillMount () {
+         this.getAllDashboards();
+     }
 
-
-    getAllDashboards(dashboardId) {
+    getAllDashboards() {
         const data = {dashboards: undefined};
         api('GET', `${serverUrl}/api/v1/dashboard/`, data)
             .then(response => response.json())
@@ -55,7 +59,11 @@ class PeriscopeApp extends React.Component {
     render () {
         return (
             <div>
+               <ZenoNavbar dashboards={this.state.dashboards}
+                           createDashboard={this.postNewDashboard}
+                           dashboardId="1"/>
                 <Match exactly pattern="/" component={EditorApp}/>
+                <MatchWithProps exactly pattern="/database" component={Database}/>
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/"
                                 component={DashboardApp}
                                 passProps={{dashboards: this.state.dashboards,
