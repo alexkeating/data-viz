@@ -44,7 +44,7 @@ class ZenoNavbar extends React.Component {
                         <NavItem onClick={this.props.createDashboard(this.props.dashboardId)} href={'/' + this.dashboardRedirectUrl()}>
                             Add Dashboard
                         </NavItem>
-                        <a href="/database">
+                        <a href="/database/create">
                             <Navbar.Brand>
                                 <img src={url} role="presentation"/>
                             </Navbar.Brand>

@@ -20,6 +20,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/querystring/$', views.RunQueryViewSet.as_view()),
+    url(r'^api/v1/database/$', views.DatabaseViewSet.as_view()),
     url(r'^api/v1/dashboard/$', views.DashboardViewSet.as_view()),
     url(r'^api/v1/dashboard/(?P<dashboard_id>\w+)/query/$', views.QueryViewSet.as_view()),
     url(r'^api/v1/dashboard/(?P<dashboard_id>\w+)/query/(?P<query_id>\w+)$', views.QueryViewSet.as_view()),

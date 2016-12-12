@@ -13,10 +13,12 @@ class PeriscopeApp extends React.Component {
         super();
         this.getAllDashboards = this.getAllDashboards.bind(this);
         this.postNewDashboard = this.postNewDashboard.bind(this);
+        this.postNewDatabase = this.postNewDatabase.bind(this);
         this.dataChanged = this.dataChanged.bind(this);
 
         this.state = {
              dashboards: {},
+             databases: {},
         };
     }
 
@@ -36,6 +38,16 @@ class PeriscopeApp extends React.Component {
     postNewDashboard(dashboardId) {
         if (!_.isEmpty(this.state.dashboards)) {
             api('POST', `${serverUrl}/api/v1/dashboard/`, {id: dashboardId, name: this.state.dashboards[dashboardId].name,})
+        }
+    }
+
+    postNewDatabase(database) {
+        if (!_.isEmpty(database)) {
+            api('POST', `${serverUrl}/api/v1/database/`, {database: database})
+            .then(response => response.json())
+            .then(json => this.setState({
+                databases: this.state.databases[json.id] = database
+            }))
         }
     }
 
@@ -63,7 +75,9 @@ class PeriscopeApp extends React.Component {
                            createDashboard={this.postNewDashboard}
                            dashboardId="1"/>
                 <Match exactly pattern="/" component={EditorApp}/>
-                <MatchWithProps exactly pattern="/database" component={Database}/>
+                <MatchWithProps exactly pattern="/database/create"
+                                component={Database}
+                                passProps={{postNewDatabase: this.postNewDatabase}}/>
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/"
                                 component={DashboardApp}
                                 passProps={{dashboards: this.state.dashboards,

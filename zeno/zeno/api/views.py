@@ -1,5 +1,5 @@
 import os
-from mainsite.models import Dashboard, Query
+from mainsite.models import Dashboard, Query, Database
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -38,6 +38,20 @@ class RunQueryViewSet(APIView):
         return json
 
 
+class DatabaseViewSet(APIView):
+
+    def post(self, request, **kwargs):
+        database_dict = request.data['database']
+        new_database = Database.objects.create(display_name=database_dict['display_name'],
+                                               database_type=database_dict['database_type'],
+                                               database_name=database_dict['database_name'],
+                                               database_host=['database_host'],
+                                               database_port=database_dict['database_port'],
+                                               database_username=database_dict['database_username'],
+                                               database_password=database_dict['database_password'])
+        return Response(data={'id': new_database.id}, status=status.HTTP_201_CREATED)
+
+
 class DashboardViewSet(APIView):
     """
     Queries your database
@@ -46,7 +60,7 @@ class DashboardViewSet(APIView):
     def get(self, request, **kwargs):
         queryset = Dashboard.objects.all()
         all_dashboards = {dashboard.id: {"name": dashboard.title} for dashboard in queryset}
-        return Response(data=all_dashboards, status=status.HTTP_201_CREATED)
+        return Response(data=all_dashboards, status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
         """
@@ -84,18 +98,18 @@ class QueryViewSet(RunQueryViewSet):
             all_queries = Query.objects.filter(dashboard=dashboard_id)
             if not all_queries:
                 response = {0: {}}
-                return Response(data=response, status=status.HTTP_201_CREATED)
+                return Response(data=response, status=status.HTTP_200_OK)
             response = {query.id: {'x': query.x_axis, 'y': query.y_axis, 'chart_type': query.chart_type,
                                    'querystring': query.querystring, 'dashboard': query.dashboard.id,
                                    'results': self.run_query(query=query.querystring)}
                         for query in all_queries}
-            return Response(data=response, status=status.HTTP_201_CREATED)
+            return Response(data=response, status=status.HTTP_200_OK)
 
         query = Query.objects.get(id=query_id, dashboard=dashboard_id)
 
         response = {'query': {'id': query.id, 'x': query.x_axis, 'y': query.y_axis, 'chart_type': query.chart_type,
                               'querystring': query.querystring, 'dashboard': query.dashboard.id}}
-        return Response(data=response, status=status.HTTP_201_CREATED)
+        return Response(data=response, status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
         """

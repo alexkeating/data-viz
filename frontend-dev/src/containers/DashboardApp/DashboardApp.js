@@ -62,7 +62,7 @@ class DashboardApp extends React.Component {
         const currentDashboard = _.get(
             this.props.dashboards,
             this.props.params.dashboardId,
-            { name: 'Unitled Dashboard' }
+            { name: 'Untitled Dashboard' }
         );
 
         return (
