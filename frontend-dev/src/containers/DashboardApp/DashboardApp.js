@@ -6,6 +6,8 @@ import './dashboard_app.css';
 import {findMaxId} from '../../helpers';
 import _ from 'lodash';
 // TODO
+// css -modules, create react app with css-modules
+// fix eslint modules, lodash _/fp
 //         Add database form
 //         Put in live
 //         Add Channels

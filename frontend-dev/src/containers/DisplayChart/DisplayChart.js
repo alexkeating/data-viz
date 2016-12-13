@@ -6,6 +6,7 @@ import LineGraph from '../LineGraph/LineGraph';
 
 class DisplayChart extends React.Component {
     render () {
+        // hashmap, or if statements and enumerations
         let displayChart;
         switch (this.props.chartType) {
             case 0: {
