@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {DropdownButton, MenuItem} from 'react-bootstrap'
+import Select from 'react-select';
 import Editor from '../Editor/Editor';
 import DisplayJsonTable from '../DisplayJsonTable/DisplayJsonTable';
-import ZenoNavbar from '../Navbar/ZenoNavbar';
 import ChartNavbar from '../ChartNavbar/ChartNavbar';
 import LineGraph from '../LineGraph/LineGraph';
 import BarGraph from '../BarGraph/BarGraph'
@@ -35,6 +35,7 @@ class EditorApp extends Component {
             query: {},
             chartType: 0,
             activeMenuKey: "1",
+            database: {displayName: ''},
         };
     }
 
@@ -42,8 +43,9 @@ class EditorApp extends Component {
         this.getQuery();
     }
 
-    postQuerystring(query) {
-        api('POST', `${serverUrl}/api/v1/querystring/?q_string=${query}`, undefined)
+    postQuerystring(query, database) {
+        const data={'database': database};
+        api('POST', `${serverUrl}/api/v1/querystring/?q_string=${query}`, data)
             .then(response => response.json())
             .then(json => {
                 this.setState({
@@ -61,6 +63,7 @@ class EditorApp extends Component {
             y: this.state.y,
             chart_type: this.state.chartType,
             querystring: this.state.querystring,
+            database: this.state.database,
         };
 
 
@@ -80,6 +83,7 @@ class EditorApp extends Component {
                 y: json.query.y,
                 chartType: json.query.chart_type,
                 querystring: json.query.querystring,
+                database: this.props.databases[json.query.database_id]
             }))
 
     }
@@ -114,6 +118,11 @@ class EditorApp extends Component {
              }
              case "chartType": {
                  this.setState({chartType: value.value});
+                 break
+             }
+              case "database": {
+                 this.setState({database: value.value});
+                 break
              }
          }
 
@@ -132,6 +141,7 @@ class EditorApp extends Component {
                          handleChange={this.handleChange}
                          querystring={this.state.querystring}
                          saveQuerystring={this.postNewQuery}
+                         database={this.state.database}
                      />
                 );
                 break;
@@ -193,11 +203,6 @@ class EditorApp extends Component {
 
         return (
             <div className="btn-warning container-fluid">
-                <div className="row">
-                    <ZenoNavbar dashboards={this.props.dashboards}
-                                createDashboard={this.props.postNewDashboard}
-                                dashboardId={this.props.params.dashboardId}/>
-                </div>
                 <div className="row shift-content">
                     <h1 className="text-center">Zeno</h1>
                     <ChartNavbar
@@ -205,6 +210,19 @@ class EditorApp extends Component {
                         activeKey={this.state.activeMenuKey}
                     />
                     <br/>
+                    <div className="col-md-1">
+                        <Select name="form-field-name"
+                                value={this.state.database.displayName}
+                                options={Object.keys(this.props.databases).map((key) => {
+                                    return {
+                                        'value': this.props.databases[key],
+                                        'label': this.props.databases[key].displayName,
+                                        'state': 'database'
+                                    }
+                                })}
+                                placeholder="Database"
+                                onChange={this.changeValue}/>
+                    </div>
                     {activeComponent}
                 </div>
                 <span>Results: {this.state.results.length}</span>

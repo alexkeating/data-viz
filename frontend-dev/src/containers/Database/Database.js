@@ -115,7 +115,7 @@ class Database extends React.Component {
                                 </td>
                             </tr>
                         </table>
-                        <button className="btn btn-default" onClick={this.saveDatabase}>Submit</button>
+                        <button className="btn btn-default" type="submit" onClick={this.saveDatabase}>Submit</button>
                     </form>
                 </div>
             </div>

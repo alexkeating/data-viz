@@ -19,16 +19,21 @@ class RunQueryViewSet(APIView):
         :return:
         """
         query_dict = request.query_params.dict()
-        json = {'results': self.run_query(query=query_dict.get('q_string'))}
+        json = {'results': self.run_query(query=query_dict.get('q_string'), request=request, database_id='')}
         return Response(data=json, status=status.HTTP_201_CREATED)
 
-    @staticmethod
-    def run_query(query):
+    def run_query(self, query, request, database_id):
 
         if not query:
             return [{}]
 
-        engine = create_engine(os.getenv('DATABASE_CONNECTION'))
+        if not database_id:
+            name = request.data.get('database').get('databaseName')
+            database = Database.objects.get(database_name=name)
+            database_id = database.id
+
+        database_string = self.create_database_string(database_id)
+        engine = create_engine(database_string)
         connection = engine.connect()
         result = connection.execute("{query}".format(query=query))
         print "executed query"
@@ -37,15 +42,39 @@ class RunQueryViewSet(APIView):
 
         return json
 
+    def create_database_string(self, database_id):
+        # dialect + driver: // username:password @ host:port / database
+        database = Database.objects.get(id=database_id)
+        database_string = '{dialect}://{username}:{password}@{host}:{port}/{name}'.format(
+            dialect=database.database_type,
+            username=database.database_username,
+            password=database.database_password,
+            host=database.database_host,
+            port=database.database_port,
+            name=database.database_name)
+
+        return database_string
+
+
 
 class DatabaseViewSet(APIView):
+
+    def get(self, request, **kwargs):
+        all_databases = Database.objects.all()
+        json = {database.id: {'displayName': database.display_name, 'databaseType': database.database_type,
+                              'databaseName': database.database_name, 'databaseHost': database.database_host,
+                              'databasePort': database.database_port, 'databaseUsername': database.database_username,
+                              'databasePassword': database.database_password}
+                for database in all_databases}
+
+        return Response(data=json, status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
         database_dict = request.data['database']
         new_database = Database.objects.create(display_name=database_dict['display_name'],
                                                database_type=database_dict['database_type'],
                                                database_name=database_dict['database_name'],
-                                               database_host=['database_host'],
+                                               database_host=database_dict['database_host'],
                                                database_port=database_dict['database_port'],
                                                database_username=database_dict['database_username'],
                                                database_password=database_dict['database_password'])
@@ -93,6 +122,7 @@ class QueryViewSet(RunQueryViewSet):
         # queryset = Query.objects.filter(dashboard=request)
         dashboard_id = kwargs.get('dashboard_id')
         query_id = kwargs.get('query_id')
+
         if not query_id:
             # this is for when I want to get all queries for a dashborad
             all_queries = Query.objects.filter(dashboard=dashboard_id)
@@ -101,14 +131,17 @@ class QueryViewSet(RunQueryViewSet):
                 return Response(data=response, status=status.HTTP_200_OK)
             response = {query.id: {'x': query.x_axis, 'y': query.y_axis, 'chart_type': query.chart_type,
                                    'querystring': query.querystring, 'dashboard': query.dashboard.id,
-                                   'results': self.run_query(query=query.querystring)}
+                                   'results': self.run_query(query=query.querystring, request=request,
+                                                             database_id=query.database_id),
+                                   'database_id': query.database_id}
                         for query in all_queries}
             return Response(data=response, status=status.HTTP_200_OK)
 
         query = Query.objects.get(id=query_id, dashboard=dashboard_id)
 
         response = {'query': {'id': query.id, 'x': query.x_axis, 'y': query.y_axis, 'chart_type': query.chart_type,
-                              'querystring': query.querystring, 'dashboard': query.dashboard.id}}
+                              'querystring': query.querystring, 'dashboard': query.dashboard.id,
+                              'database_id': query.database_id}}
         return Response(data=response, status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
@@ -117,12 +150,16 @@ class QueryViewSet(RunQueryViewSet):
         :param request:
         :return:
         """
-
-        query_dict = request.data
+        try:
+            query_dict = request.data
+            database_name = request.data.get('database').get('databaseName')
+        except AttributeError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         query_id = kwargs.get('query_id')
         dashboard_id = kwargs.get('dashboard_id')
         try:
             dashboard = Dashboard.objects.get(id=dashboard_id)
+            database = Database.objects.get(database_name=database_name)
         except Dashboard.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         try:
@@ -132,10 +169,11 @@ class QueryViewSet(RunQueryViewSet):
             query.chart_type = query_dict['chart_type']
             query.querystring = query_dict['querystring']
             query.dashboard = dashboard
-            query.save(update_fields=['x_axis', 'y_axis', 'chart_type','querystring', 'dashboard'])
+            query.database = database
+            query.save(update_fields=['x_axis', 'y_axis', 'chart_type','querystring', 'dashboard', 'database'])
         except Query.DoesNotExist:
             Query.objects.create(id=query_id, x_axis=query_dict['x'], y_axis=query_dict['y'],
                                  querystring=query_dict['querystring'], chart_type=query_dict['chart_type'],
-                                 dashboard=dashboard)
+                                 dashboard=dashboard, database=database)
 
         return Response(status=status.HTTP_201_CREATED)

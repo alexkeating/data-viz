@@ -12,6 +12,7 @@ class PeriscopeApp extends React.Component {
     constructor () {
         super();
         this.getAllDashboards = this.getAllDashboards.bind(this);
+        this.getAllDatabases = this.getAllDatabases.bind(this);
         this.postNewDashboard = this.postNewDashboard.bind(this);
         this.postNewDatabase = this.postNewDatabase.bind(this);
         this.dataChanged = this.dataChanged.bind(this);
@@ -24,6 +25,7 @@ class PeriscopeApp extends React.Component {
 
      componentWillMount () {
          this.getAllDashboards();
+         this.getAllDatabases();
      }
 
     getAllDashboards() {
@@ -32,6 +34,15 @@ class PeriscopeApp extends React.Component {
             .then(response => response.json())
             .then(json => this.setState({
                 dashboards: json,
+            }))
+    }
+
+    getAllDatabases() {
+        const data = {dashboards: undefined};
+        api('GET', `${serverUrl}/api/v1/database/`, data)
+            .then(response => response.json())
+            .then(json => this.setState({
+                databases: json,
             }))
     }
 
@@ -88,7 +99,8 @@ class PeriscopeApp extends React.Component {
                                 component={EditorApp}
                                 passProps={{dashboards: this.state.dashboards,
                                             getAllDashboards: this.getAllDashboards,
-                                            postNewDashboard: this.postNewDashboard}}/>
+                                            postNewDashboard: this.postNewDashboard,
+                                            databases: this.state.databases}}/>
                 <Miss component={Error}/>
             </div>
         )

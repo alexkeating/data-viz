@@ -17,7 +17,7 @@ class Editor extends React.Component {
                         <br />
                         <button onClick={(e) => {
                             e.preventDefault();
-                            this.props.sendRequest(this.props.querystring);
+                            this.props.sendRequest(this.props.querystring, this.props.database);
                         }
                         } className="btn btn-default pull-right">Submit
                         </button>

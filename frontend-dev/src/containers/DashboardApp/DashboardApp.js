@@ -1,17 +1,17 @@
 import React from 'react';
 import ZenoNavbar from '../Navbar/ZenoNavbar';
 import DisplayChart from '../DisplayChart/DisplayChart';
-
+import {serverUrl} from '../../api';
 import './dashboard_app.css';
 import {findMaxId} from '../../helpers';
 import _ from 'lodash';
 // TODO
 // css -modules, create react app with css-modules
 // fix eslint modules, lodash _/fp
-//         Add database form
 //         Put in live
 //         Add Channels
 //         react-grid-layout
+//         add unique index on db name
 //      7. Clean up styling
 //      8. Make charts draggable
 
@@ -40,7 +40,7 @@ class DashboardApp extends React.Component {
      getAllqueries () {
 
         const {dashboardId} = this.props.params;
-        const url = `http://127.0.0.1:8000/api/v1/dashboard/${dashboardId}/query/`;
+        const url = `${serverUrl}/api/v1/dashboard/${dashboardId}/query/`;
 
         fetch(url)
             .then(response => response.json())
@@ -52,11 +52,7 @@ class DashboardApp extends React.Component {
     }
 
     clickChanged(click) {
-        // data = { description: "New validated text comes here" }
-        // Update your model from here
-
             this.props.postNewDashboard(this.props.params.dashboardId)
-
     }
 
 
