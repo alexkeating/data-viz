@@ -25,8 +25,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint .",
-    "styles": "stylus -u autoprefixer-stylus ./src/css/style.bootstrap.styl -o ./src/css/bootstrap.css",
-    "styles:watch": "stylus -u autoprefixer-stylus -w ./src/css/bosststrap.styl -o ./src/css/bootstrap.css"
+    "lint": "eslint ."
   }
 }
