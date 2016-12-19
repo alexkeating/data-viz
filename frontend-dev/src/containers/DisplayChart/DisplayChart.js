@@ -35,13 +35,21 @@ class DisplayChart extends React.Component {
                 break;
             }
         }
+        let editButton;
+        if (this.props.results) {
+            editButton = (
+                <a className="btn btn-default" href={`${this.props.dashboard}/query/${this.props.queryId}`}>
+                    <span>Edit</span>
+                </a>)
+        }
+        else {
+            editButton = (<span/>)
+        }
         return (
             <div>
                 {displayChart}
                  <div className="row">
-                    <a className="btn btn-default" href={`${this.props.dashboard}/query/${this.props.queryId}`}>
-                        <span>Edit</span>
-                    </a>
+                     {editButton}
                 </div>
             </div>
         )

@@ -108,9 +108,9 @@ class DashboardViewSet(APIView):
             dashboard.title = dashboard_dict['name']
             dashboard.save(update_fields=['title'])
         except Dashboard.DoesNotExist:
-            Dashboard.objects.create(id=dashboard_dict['id'], title=dashboard_dict['name'])
+            dashboard = Dashboard.objects.create(id=dashboard_dict['id'], title=dashboard_dict['name'])
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(data={'id': dashboard.id, 'name': dashboard.title}, status=status.HTTP_201_CREATED)
 
 
 class QueryViewSet(RunQueryViewSet):

@@ -46,9 +46,12 @@ class PeriscopeApp extends React.Component {
             }))
     }
 
-    postNewDashboard(dashboardId) {
+    postNewDashboard(dashboardId, dashboardName='Untitled Dashboard') {
         if (!_.isEmpty(this.state.dashboards)) {
             api('POST', `${serverUrl}/api/v1/dashboard/`, {id: dashboardId, name: this.state.dashboards[dashboardId].name,})
+        }
+        if (dashboardId === undefined) {
+            api('POST', `${serverUrl}/api/v1/dashboard/`, {id: '', name: dashboardName,})
         }
     }
 
@@ -85,7 +88,7 @@ class PeriscopeApp extends React.Component {
                <ZenoNavbar dashboards={this.state.dashboards}
                            createDashboard={this.postNewDashboard}
                            dashboardId="1"/>
-                <Match exactly pattern="/" component={EditorApp}/>
+                <Match exactly pattern="/" component={Database}/>
                 <MatchWithProps exactly pattern="/database/create"
                                 component={Database}
                                 passProps={{postNewDatabase: this.postNewDatabase}}/>

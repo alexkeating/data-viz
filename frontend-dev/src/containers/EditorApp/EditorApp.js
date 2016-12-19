@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {DropdownButton, MenuItem} from 'react-bootstrap'
+import Dropdown from 'react-dropdown';
 import Select from 'react-select';
 import Editor from '../Editor/Editor';
 import DisplayJsonTable from '../DisplayJsonTable/DisplayJsonTable';
@@ -14,6 +15,7 @@ import 'whatwg-fetch';
 import {api, serverUrl} from '../../api';
 import './editor_app.css'
 import 'react-select/dist/react-select.css';
+import 'react-dropdown/style.css'
 
 class EditorApp extends Component {
     constructor(props) {
@@ -103,7 +105,7 @@ class EditorApp extends Component {
     }
 
     handleChange(event) {
-        this.setState({querystring: event.target.value});
+        this.setState({querystring: event});
     }
 
      changeValue(value) {
@@ -136,13 +138,31 @@ class EditorApp extends Component {
 
             case "1": {
                       activeComponent = (
-                     <Editor
-                         sendRequest={this.postQuerystring}
-                         handleChange={this.handleChange}
-                         querystring={this.state.querystring}
-                         saveQuerystring={this.postNewQuery}
-                         database={this.state.database}
-                     />
+                          <div className="row">
+                              <div className="col-md-2">
+                                  <Dropdown
+                                      value={this.state.database.displayName}
+                                      options={Object.keys(this.props.databases).map((key) => {
+                                          return {
+                                              'value': this.props.databases[key],
+                                              'label': this.props.databases[key].displayName,
+                                              'state': 'database'
+                                          }
+                                      })}
+                                      placeholder="Database"
+                                      onChange={this.changeValue}/>
+                              </div>
+                              <div className="col-md-10">
+                                  <Editor
+                                      sendRequest={this.postQuerystring}
+                                      handleChange={this.handleChange}
+                                      querystring={this.state.querystring}
+                                      saveQuerystring={this.postNewQuery}
+                                      database={this.state.database}
+
+                                  />
+                              </div>
+                          </div>
                 );
                 break;
             }
@@ -206,23 +226,10 @@ class EditorApp extends Component {
                 <div className="row shift-content">
                     <h1 className="text-center">Zeno</h1>
                     <ChartNavbar
-                        handleSelect={(activeKey) => this.setState({ activeMenuKey: activeKey})}
+                        handleSelect={(activeKey) => this.setState({activeMenuKey: activeKey})}
                         activeKey={this.state.activeMenuKey}
                     />
                     <br/>
-                    <div className="col-md-1">
-                        <Select name="form-field-name"
-                                value={this.state.database.displayName}
-                                options={Object.keys(this.props.databases).map((key) => {
-                                    return {
-                                        'value': this.props.databases[key],
-                                        'label': this.props.databases[key].displayName,
-                                        'state': 'database'
-                                    }
-                                })}
-                                placeholder="Database"
-                                onChange={this.changeValue}/>
-                    </div>
                     {activeComponent}
                 </div>
                 <span>Results: {this.state.results.length}</span>

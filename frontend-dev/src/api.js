@@ -1,4 +1,4 @@
-export const serverUrl = `http://0.0.0.0:5100`;
+export const serverUrl = `http://127.0.0.1:8000`;
 
 export const api = (method, apiEndpoint, data) => {
     // This should be one statement, get rid of the case statement and make this one statement

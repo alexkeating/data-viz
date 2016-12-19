@@ -70,6 +70,7 @@ class Database extends React.Component {
         return (
             <div className="row shift-content black-text white-bg">
                 <div className="col-md-12 text-center">
+                    <h1>Please Enter a Database</h1>
                     <form method="post">
                         <table className="table-responsive">
                             <tr>
@@ -81,7 +82,8 @@ class Database extends React.Component {
                             <tr>
                                 <td>Database Type</td>
                                 <td>
-                                    <input type="text" onChange={(e) => this.handleChange(e, 'databaseType')}/>
+                                    <input type="text" onChange={(e) => this.handleChange(e, 'databaseType')}
+                                           placeholder="postgresql"/>
                                 </td>
                             </tr>
                             <tr>

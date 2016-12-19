@@ -10,9 +10,8 @@ class ZenoNavbar extends React.Component {
     }
 
     dashboardRedirectUrl () {
-        // const highest_id = Math.max(...Object.keys(this.props.dashboards).map(key => parseInt(key)));
-        // return `dashboard/${highest_id+1}`;
-        return `1`
+        const highest_id = Math.max(...Object.keys(this.props.dashboards).map(key => parseInt(key)));
+        return `dashboard/${highest_id+1}`;
     }
 
     render() {
