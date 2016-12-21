@@ -2,5 +2,8 @@
   "scripts": {
     "install": "cd frontend-dev && npm install",
     "build": "cd frontend-dev && npm run build"
+  },
+  "dependencies": {
+    "react-grid-layout": "^0.13.9"
   }
 }
