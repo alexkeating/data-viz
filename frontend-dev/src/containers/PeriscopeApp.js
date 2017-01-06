@@ -1,5 +1,6 @@
 import React from 'react';
 import { Match, Miss } from 'react-router';
+import { fetchDasboardsIfNeeded } from '../actions';
 
 import EditorApp from './EditorApp/EditorApp';
 import DashboardApp from './DashboardApp/DashboardApp';
@@ -11,7 +12,7 @@ import _ from 'lodash';
 class PeriscopeApp extends React.Component {
     constructor () {
         super();
-        this.getAllDashboards = this.getAllDashboards.bind(this);
+        // this.getAllDashboards = this.getAllDashboards.bind(this);
         this.getAllDatabases = this.getAllDatabases.bind(this);
         this.postNewDashboard = this.postNewDashboard.bind(this);
         this.postNewDatabase = this.postNewDatabase.bind(this);
@@ -24,18 +25,27 @@ class PeriscopeApp extends React.Component {
     }
 
      componentWillMount () {
-         this.getAllDashboards();
+         debugger;
+         const { dispatch } = this.props;
+         dispatch(fetchDasboardsIfNeeded());
          this.getAllDatabases();
      }
 
-    getAllDashboards() {
-        const data = {dashboards: undefined};
-        api('GET', `${serverUrl}/api/v1/dashboard/`, data)
-            .then(response => response.json())
-            .then(json => this.setState({
-                dashboards: json,
-            }))
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.dashboards !== this.props.dashboards) {
+            const {dispatch} = nextProps;
+            dispatch(fetchDasboardsIfNeeded())
+        }
     }
+
+    // getAllDashboards() {
+    //     const data = {dashboards: undefined};
+    //     api('GET', `${serverUrl}/api/v1/dashboard/`, data)
+    //         .then(response => response.json())
+    //         .then(json => this.setState({
+    //             dashboards: json,
+    //         }))
+    // }
 
     getAllDatabases() {
         const data = {dashboards: undefined};
@@ -95,13 +105,13 @@ class PeriscopeApp extends React.Component {
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/"
                                 component={DashboardApp}
                                 passProps={{dashboards: this.state.dashboards,
-                                            getAllDashboards: this.getAllDashboards,
+                                            getAllDashboards: this.props.dispatch(fetchDasboardsIfNeeded()),
                                             postNewDashboard: this.postNewDashboard,
                                             dataChanged: this.dataChanged}}/>
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/query/:queryId/"
                                 component={EditorApp}
                                 passProps={{dashboards: this.state.dashboards,
-                                            getAllDashboards: this.getAllDashboards,
+                                            getAllDashboards: this.props.dispatch(fetchDasboardsIfNeeded()),
                                             postNewDashboard: this.postNewDashboard,
                                             databases: this.state.databases}}/>
                 <Miss component={Error}/>

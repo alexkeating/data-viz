@@ -19,6 +19,12 @@ import _ from 'lodash';
 
 //  manageing fetch in the lifecycle asynchrounous stuff, errors in console?, reverse url
 //     Redux/flux?
+// dispatch to props create callbacks to class, dispatch to props reciece dispatch
+// recieves function, distpatch to props would get a function, bound actions
+// connect container for queries, in component you need to handle button clicks
+// associated with id, mapdispatch to props handle query edit take id as a parameter
+// conenct every query box, describe handle edit click, create callback that creates callback to specific action
+//
 class DashboardApp extends React.Component {
 
     constructor (props) {
@@ -78,8 +84,10 @@ class DashboardApp extends React.Component {
                     </a>
                 </div>
                 <div className="container white-bg">
-                    {
-                        Object.keys(this.state.queries)
+                    {/*instead of rendering charts, try to breakdown to seperate files*/}
+                    {/*imitate map state to props*/}
+                    {/*add another layer on top of display chart callback handle edit*/}
+                    {  Object.keys(this.state.queries)
                                .map(key => <DisplayChart key={key}
                                                          results={this.state.queries[key].results}
                                                          queryId={key}
