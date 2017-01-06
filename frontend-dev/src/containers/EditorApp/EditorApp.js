@@ -24,6 +24,7 @@ class EditorApp extends Component {
         this.postQuerystring = this.postQuerystring.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.changeValue = this.changeValue.bind(this);
+        this.changeDatabaseValue = this.changeDatabaseValue.bind(this);
         this.postNewQuery = this.postNewQuery.bind(this);
         this.getQuery = this.getQuery.bind(this);
         this.getAxisValues = this.getAxisValues.bind(this);
@@ -122,12 +123,12 @@ class EditorApp extends Component {
                  this.setState({chartType: value.value});
                  break
              }
-              case "database": {
-                 this.setState({database: value.value});
-                 break
-             }
          }
 
+    }
+
+    changeDatabaseValue(value) {
+        this.setState({database: value.value})
     }
 
 
@@ -150,7 +151,7 @@ class EditorApp extends Component {
                                           }
                                       })}
                                       placeholder="Database"
-                                      onChange={this.changeValue}/>
+                                      onChange={this.changeDatabaseValue}/>
                               </div>
                               <div className="col-md-10">
                                   <Editor
