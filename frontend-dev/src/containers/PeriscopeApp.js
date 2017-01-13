@@ -1,6 +1,6 @@
 import React from 'react';
 import { Match, Miss } from 'react-router';
-import { fetchDasboardsIfNeeded } from '../actions';
+import { fetchDashboardsIfNeeded } from '../actions';
 
 import EditorApp from './EditorApp/EditorApp';
 import DashboardApp from './DashboardApp/DashboardApp';
@@ -9,6 +9,10 @@ import ZenoNavbar from './Navbar/ZenoNavbar';
 import Error from './Error/Error';
 import {api, serverUrl} from '../api';
 import _ from 'lodash';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 class PeriscopeApp extends React.Component {
     constructor () {
         super();
@@ -25,18 +29,9 @@ class PeriscopeApp extends React.Component {
     }
 
      componentWillMount () {
-         debugger;
-         const { dispatch } = this.props;
-         dispatch(fetchDasboardsIfNeeded());
+         this.props.actions.fetchDashboardsIfNeeded();
          this.getAllDatabases();
      }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.dashboards !== this.props.dashboards) {
-            const {dispatch} = nextProps;
-            dispatch(fetchDasboardsIfNeeded())
-        }
-    }
 
     // getAllDashboards() {
     //     const data = {dashboards: undefined};
@@ -95,7 +90,7 @@ class PeriscopeApp extends React.Component {
     render () {
         return (
             <div>
-               <ZenoNavbar dashboards={this.state.dashboards}
+               <ZenoNavbar dashboards={this.props.dashboards}
                            createDashboard={this.postNewDashboard}
                            dashboardId="1"/>
                 <Match exactly pattern="/" component={Database}/>
@@ -105,13 +100,13 @@ class PeriscopeApp extends React.Component {
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/"
                                 component={DashboardApp}
                                 passProps={{dashboards: this.state.dashboards,
-                                            getAllDashboards: this.props.dispatch(fetchDasboardsIfNeeded()),
+                                            getAllDashboards: this.props.actions.fetchDashboardsIfNeeded,
                                             postNewDashboard: this.postNewDashboard,
                                             dataChanged: this.dataChanged}}/>
                 <MatchWithProps exactly pattern="/dashboard/:dashboardId/query/:queryId/"
                                 component={EditorApp}
                                 passProps={{dashboards: this.state.dashboards,
-                                            getAllDashboards: this.props.dispatch(fetchDasboardsIfNeeded()),
+                                            getAllDashboards: this.props.actions.fetchDashboardsIfNeeded,
                                             postNewDashboard: this.postNewDashboard,
                                             databases: this.state.databases}}/>
                 <Miss component={Error}/>
@@ -124,4 +119,18 @@ const MatchWithProps = ({ component:Comp, passProps, ...props}) => (
   <Match {...props} render={(matchedProps) => <Comp {...passProps} {...matchedProps} /> } />
 );
 
-export default PeriscopeApp;
+
+function mapStateToProps(state) {
+  return {
+    dashboards: state.dashboardView.dashboards
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(
+      {fetchDashboardsIfNeeded}, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PeriscopeApp)

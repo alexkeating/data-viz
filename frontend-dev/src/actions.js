@@ -1,4 +1,5 @@
 import {api, serverUrl} from './api';
+import _ from 'lodash';
 export const REQUEST_DASHBOARDS = 'REQUEST_DASHBOARDS';
 export const RECEIVE_DASHBOARDS = 'RECEIVE_DASHBOARDS';
 export const ERROR_DASHBOARDS = 'ERROR_DASHBOARDS';
@@ -12,7 +13,7 @@ function requestDashboards() {
 function receiveDashboards(json) {
     return {
         type: RECEIVE_DASHBOARDS,
-        posts: json.dashboards,
+        dashboards: json,
     }
 }
 
@@ -27,8 +28,8 @@ function fetchDashboards() {
 }
 
 function shouldFetchDashboards(state) {
-  const dashboards = state.dashboards;
-  if (!dashboards) {
+  const dashboards = state.dashboardView.dashboards;
+  if (_.isEmpty(dashboards)) {
     return true
   } else if (dashboards.isFetching) {
     return false
@@ -37,9 +38,11 @@ function shouldFetchDashboards(state) {
   }
 }
 
-export function fetchDasboardsIfNeeded() {
+export function fetchDashboardsIfNeeded() {
   return (dispatch, getState) => {
+      debugger;
     if (shouldFetchDashboards(getState())) {
+        debugger;
       return dispatch(fetchDashboards())
     }
   }

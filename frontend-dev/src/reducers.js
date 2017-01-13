@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux'
 import {
   REQUEST_DASHBOARDS, RECEIVE_DASHBOARDS, ERROR_DASHBOARDS
 } from './actions'
@@ -30,11 +29,11 @@ function dashboards(state = {
   }
 }
 
-const rootReducer = combineReducers({
-  dashboards,
-});
+// const rootReducer = combineReducers({
+//   dashboards,
+// });
 
-export default rootReducer
+export default dashboards;
 
 // import { combineReducers } from 'redux'
 // import {

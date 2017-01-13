@@ -15,6 +15,7 @@ class ZenoNavbar extends React.Component {
     }
 
     render() {
+
         let dashboardList;
         if (!_.isEmpty(this.props.dashboards)) {
            dashboardList =  (Object.keys(this.props.dashboards)

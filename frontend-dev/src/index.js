@@ -18,7 +18,7 @@ const Root = () => {
   return (
       <Provider store={store}>
           <BrowserRouter>
-              <PeriscopeApp/>
+              <PeriscopeApp />
           </BrowserRouter>
       </Provider>
 
